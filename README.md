@@ -4,7 +4,6 @@
 
 
 
-
-![](//AD1.PNG)
+![](//github.com/ctolnik/AD_User_Management/AD1.PNG)
 
 
