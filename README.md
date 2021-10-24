@@ -1,1 +1,10 @@
-# AD_User_Management
+
+
+# Active Directory User Management 
+
+
+
+
+![](//AD1.PNG)
+
+
