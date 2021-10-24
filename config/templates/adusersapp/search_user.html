@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content" class="container internal">
+    <h1>Home</h1>
+        {{ request.user }}
+        <hr>
+        <!-- {{ users }} -->
+        {% for cn, photo in users %}
+            <!-- <img src="data:image/gif;base64,{{ photo }}"> -->
+            
+            {{ cn }}
+            {% if photo %}
+            <img src="data:image/gif;base64,{{ photo }}">
+            {% endif %}
+            <hr>
+        {% endfor %}
+
+</div>
+{% endblock %}

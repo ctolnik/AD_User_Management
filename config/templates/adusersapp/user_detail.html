@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %} Информация о пользователе {% endblock %}
+{% block content %}
+{% load static %}
+
+
+<div id="content" class="container internal">
+  <div class="row">
+    <div class="col-xxl-2">
+      
+     <h5>Действия:</h5>
+
+     
+     {% if user.userAccountControl == 512 or user.userAccountControl == 66048 %}
+     <a class="btn btn-danger mt-3 mb-3" href="{% url 'adusersapp:disable_user_url' ad_user=user.sAMAccountName %}" role="button">Выключить</a>
+     
+       {% else %}
+       <a class="btn btn-success mt-3 mb-3" href="{% url 'adusersapp:enable_user_url' ad_user=user.sAMAccountName %}" role="button">Включить</a>
+       {% endif %}
+      <br>
+
+{% if pass %}
+<p> Сообщение от сервера по смене пароля: <mark>{{ pass }}</mark></p>
+{% endif %}
+<br>
+
+
+<button type="button" class="btn btn-outline-warning mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Изменить пароль</button>
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Смена пароля</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+              {% load user_tags %}
+              <form action="{% url 'adusersapp:user_detail_url' ad_user=user.sAMAccountName %}" method="get">
+                <div class="mb-3">
+                  <label for="new_password">Новый пароль: </label>
+                  <input class="form-control" id="new_password" type="text" name="new_password" value="{% gen_password %}">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Назначить новый пароль</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-7">
+
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            {% if user.thumbnailPhoto %}
+              <img src="data:image/gif;base64,{{ user.thumbnailPhoto }}" class="img-fluid rounded-start" alt="{{ user.sAMAccountName }}">
+            {% else %}
+              <img src="{% static 'img/pngegg.png' %}" alt="{{ user.sAMAccountName }}" width="256" height="256">
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            <div class="card-header text-center">
+              <h4> <a href="{% url 'adusersapp:enable_user_url' ad_user=user.sAMAccountName %}">  {{ user.displayName }}</a></h4>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">
+                Статус: 
+                {% if user.userAccountControl == 512 %} <img src="{% static 'svg/emoji-smile.svg' %}" alt="Bootstrap" width="32" height="32"> <font color="green"> Включена</font>
+                {% elif user.userAccountControl == 66048 %} <font color="orange"> Включена. Срок действия пароля не ограничен </font>
+                  {% else %} <img src="{% static 'svg/emoji-frown.svg' %}" alt="Bootstrap" width="32" height="32"> <font color="red"> Выключена</font>
+                  
+                  
+                  {% endif %}
+                  <i>(Код: {{ user.userAccountControl }})</i>
+              </h5>
+              <p class="card-text"><img src="{% static 'svg/info.svg' %}" alt="Bootstrap" width="32" height="32"> Должность: <a href="{% url 'adusersapp:attribute_detail' attribute='title' value=user.title %}">{{ user.title }}</a></p>
+              <p class="card-text"><img src="{% static 'svg/diagram-2.svg' %}" alt="Bootstrap" width="32" height="32"> Подразделение: <a href="{% url 'adusersapp:attribute_detail' attribute='department' value=user.department %}">{{ user.department }}</a></p>
+              <p class="card-text"><img src="{% static 'svg/person.svg' %}" alt="Bootstrap" width="32" height="32"> Руководитель: <a href="{% url 'adusersapp:attribute_detail' attribute='cn' value=user.manager %}">{{ user.manager }}</a></p>
+              <p class="card-text"><img src="{% static 'svg/building.svg' %}" alt="Bootstrap" width="32" height="32"> Организация: <a href="{% url 'adusersapp:attribute_detail' attribute='company' value=user.company %}"> {{ user.company }}</a></p>
+              <p class="card-text"><img src="{% static 'svg/telephone.svg' %}" alt="Bootstrap" width="32" height="32"> Телефон: <a href="tel:{{ user.telephoneNumber }}">{{ user.telephoneNumber }}</a></p>
+              <p class="card-text"><img src="{% static 'svg/envelope.svg' %}" alt="Bootstrap" width="32" height="32"> E-mail: <a href="mailto:{{ user.mail }}">{{ user.mail }}</a></p>
+              <hr>
+              <p class="card-text">Табельный номер: {{ user.employeeID }}</p>
+              <p class="card-text">Логин: {{ user.sAMAccountName }}</p>
+              <p class="card-text">AD CN: {{ user.cn }}</p>
+              
+            </div>
+            <div class="card-footer text-muted">
+              <p class="card-text">Создано: {{ user.whenCreated }}</p>
+              <p class="card-text">Изменена: {{ user.whenChanged }}</p>
+              <p class="card-text">Последний вход: {{ user.lastLogon }}</p>
+              <p class="card-text">Неправильный ввод пароля: {{ user.badPasswordTime }}</p>
+              <p class="card-text">Счётчик неправильных паролей: {{ user.badPwdCount }}</p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-3">
+      <h4> Управление группами </h4>
+      <br>
+      <div class="accordion" id="accordionGroups">
+        
+
+        <form action="{% url 'adusersapp:user_detail_url' ad_user=user.sAMAccountName %}" method="get">
+          <button type="submit" class="btn btn-danger mt-3 mb-3">Изменить права</button>
+          <br>
+        {% for category, ad_groups in groups.items %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}"
+              aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+              <strong> {{ category }}</strong>
+            </button>
+          </h2>
+          <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+            data-bs-parent="#accordionGroups">
+            <div class="accordion-body">
+              <strong>Количество групп: {{ ad_groups|length }}</strong>
+              <br>
+              {% for group in ad_groups %}
+              {% if group in member_of_group %}
+              
+              <br>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="{{ group.entry_dn }}" name="{{ group.cn.value }}"
+                    id="flexCheckChecked" checked>
+                  <label class="form-check-label" for="flexCheckChecked">
+                    <p class="fw-bold">{{ group.cn.value }}</p>
+                    <p class="fw-lighter">{{ group.description.value }}</p>
+                  </label>
+                </div>
+                <hr>
+                {% else %}
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="{{ group.entry_dn }}" name="{{ group.cn.value }}"
+                    id="flexCheckChecked">
+                  <label class="form-check-label" for="flexCheckChecked">
+                    <p class="fw-bold">{{ group.cn.value }}</p>
+                    <p class="fw-lighter">{{ group.description.value }}</p>
+                  </label>
+                </div>
+                <hr>
+                {% endif %}
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+{% endfor %}
+
+</form>
+
+
+
+      
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

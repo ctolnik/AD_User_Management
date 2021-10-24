@@ -1,0 +1,40 @@
+{% load static %}
+
+
+
+
+<nav class="py-2 bg-light border-bottom">
+  <div class="container d-flex flex-wrap">
+    <ul class="nav me-auto">
+      <li class="nav-item"><a href="#" class="nav-link link-dark px-2 active" aria-current="page">Главная</a></li>
+      <li class="nav-item"><a href="{% url 'adusersapp:users_list_url' %}" class="nav-link link-dark px-2">Пользователи</a></li>
+      <li class="nav-item"><a href="{% url 'adusersapp:groups_list_url' %}" class="nav-link link-dark px-2">Группы</a></li>
+      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Компьютеры</a></li>
+      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Документы</a></li>
+    </ul>
+    <ul class="nav">
+      {% if request.user.is_authenticated %}
+      <li class="nav-item">Пользователь: {{ request.user.last_name }} {{ request.user.first_name }}</li>
+      <li class="nav-link link-light"><a href="{% url 'users:logout' %}" class="nav-link link-dark px-2 active">Выйти</a></li>
+
+      {% else %}
+      <li class="nav-item active"><a href="{% url 'users:login' %}" class="nav-link link-dark px-2">Вход</a></li>
+      
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+<header class="py-3 mb-4 border-bottom">
+  <div class="container d-flex flex-wrap justify-content-center">
+    <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      <span class="fs-4">ДИТиС АО "ММЗ"</span>
+    </a>
+
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0" action="{% url 'adusersapp:users_list_url' %}">
+      <input type="search" class="form-control" placeholder="Фамилия..." aria-label="Search" name="search_cn">
+    </form>
+
+
+  </div>
+</header>

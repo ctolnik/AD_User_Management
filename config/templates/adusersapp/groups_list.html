@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %} Список Групп {% endblock %}
+{% block content %}
+  <div id="content" class="container internal">
+    <h1>Управление группами</h1>
+    
+      <div class="accordion" id="accordionRoot">
+        {% for key, value in OUs.items %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ key }}" aria-expanded="false" aria-controls="collapse{{ key }}">
+              {{ key }}
+            </button>
+          </h2>
+          <div id="collapse{{ key }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionRoot">
+            <div class="accordion-body">
+              <!-- <strong>{{ value }}</strong>  -->
+              
+                <div class="accordion" id="accordionSubRoot">
+                  {% for item in value %}
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ item }}" aria-expanded="false" aria-controls="collapse{{ item }}">
+                        {{ item }}
+                      </button>
+                    </h2>
+                    <div id="collapse{{ item }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionSubRoot">
+                      <div class="accordion-body">
+                        <!-- <strong>{{ subvalue }}</strong>  -->
+                        <div class="accordion" id="accordionSubRoot_2">
+                          {% for subitem in item %}
+                          <div class="accordion-item"> 
+                            <h2 class="accordion-header" id="headingOne">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ subitem }}" aria-expanded="false" aria-controls="collapse{{ subitem }}">
+                                {{ subitem }}
+                              </button>
+                            </h2>
+                            <div id="collapse{{ subitem }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionSubRoot_2">
+                              <div class="accordion-body">
+                                last item
+                              </div>
+                            </div>
+                          </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% empty %}
+                  {% endfor %}
+                </div>
+
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        {% endfor %}
+      </div>
+
+  </div>
+{% endblock %}

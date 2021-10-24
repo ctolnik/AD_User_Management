@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %} Список пользователей {% endblock %}
+{% block content %}
+<div id="content" class="container internal">
+    <h1>Управление пользователями</h1>
+     <h2>   Приветствую тебя: {{ request.user.last_name }} {{ request.user.first_name }}! </h2>
+     <br>
+     <h3>   По вашему запросу найдено: {{ users|length }} записей</h3>
+     <br>
+    
+     <div class="row row-cols-1 row-cols-md-4 g-4">
+      {% for user in users %}
+      
+      <div class="col">
+        
+        <div class="card mb-3">
+          {% if user.thumbnailPhoto %}
+            <div class="col-md-4">
+              <img src="data:image/gif;base64,{{ user.thumbnailPhoto }}" class="img-fluid rounded-start" alt="{{ user.sAMAccountName }}">
+            </div>
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title"> <a href="{% url 'adusersapp:user_detail_url' ad_user=user.sAMAccountName %}"> {{ user.displayName }} </a></h5>
+            <p class="card-text">
+              Статус: 
+              {% if user.userAccountControl == 512 %} <font color="green"> Включена</font>
+              {% elif user.userAccountControl == 66048 %} <font color="orange"> Включена. Срок действия пароля не ограничен </font>
+              {% elif user.userAccountControl == 544 %} <font color="orange"> Включена. Пароль не требуется </font>
+                {% else %} <font color="red"> Выключена</font>
+                
+                
+                {% endif %}
+                <i>(Код: {{ user.userAccountControl }})</i>
+            </p>
+            <p class="card-text">Должность: <a href="{% url 'adusersapp:attribute_detail' attribute='title' value=user.title %}">{{ user.title }}</a></p>
+            <p class="card-text">Подразделение: <a href="{% url 'adusersapp:attribute_detail' attribute='department' value=user.department %}">{{ user.department }}</a></p>
+            <p class="card-text">Руководитель: <a href="{% url 'adusersapp:attribute_detail' attribute='cn' value=user.manager %}">{{ user.manager }}</a></p>
+            <p class="card-text">Организация: <a href="{% url 'adusersapp:attribute_detail' attribute='company' value=user.company %}"> {{ user.company }}</a></p>
+            <p class="card-text">Телефон: <a href="tel:{{ user.telephoneNumber }}">{{ user.telephoneNumber }}</a></p>
+            <p class="card-text">E-mail: <a href="mailto:{{ user.mail }}">{{ user.mail }}</a></p>
+            <p class="card-text">Табельный номер: {{ user.employeeID }}</p>
+            <p class="card-text">Логин: {{ user.sAMAccountName }}</p>
+            <p class="card-text">AD CN: {{ user.cn }}</p>
+            
+          </div>
+          <a href="{% url 'adusersapp:user_detail_url' ad_user=user.sAMAccountName %}" class="btn btn-outline-success">Просмотр</a>
+          
+        </div>
+      </div>
+        {% endfor %}
+
+
+
+
+  </div>
+  
+
+{% endblock %}

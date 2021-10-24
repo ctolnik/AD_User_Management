@@ -1,0 +1,46 @@
+<!DOCTYPE html> 
+<html lang="ru"> 
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'img/fav/fav.ico' %}" type="image">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
+        <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+    <script>
+
+      function calc()
+      {
+        let message;
+
+        message = 'Hello';
+        if (document.getElementById('flexSwitchCheckDefault').checked) 
+        {
+          message = 'Msg if check';
+          alert(message);
+
+        } else {
+          message = 'Msg else Uncheck';
+          alert(message);
+        }
+      }
+      
+      </script>
+    <title>
+        {% block title %}ДИТиС АО "ММЗ"{% endblock %}
+    </title>
+  </head>
+  <body>
+    {% include 'includes/header.html' %}
+    <main>
+      {% block content %}
+        Контент не подвезли :( 
+      {% endblock %}
+    </main>
+    
+
+  </body>
+</html>
